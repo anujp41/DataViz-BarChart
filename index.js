@@ -4,7 +4,6 @@ const {data: jsonData} = window;
 // array of GDP data
 const {source_name, description, from_date, to_date, data: GDPData} = jsonData;
 const totalData = GDPData.length;
-console.log(`totalData: ${totalData}`)
 
 //placeholders for min/max GDP
 let minGDP = Infinity;
