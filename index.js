@@ -26,14 +26,18 @@ const formatDate = date => {
 
 const formatAmount = amount => {
   amount = amount.toString();
-  const amtInt = amount.slice(0, amount.indexOf('.'));
-  const decimal = amount.slice(amount.indexOf('.'));
+  const hasDecimal = amount.includes('.');
+  let decimal = null;
+  if (hasDecimal) {
+    decimal = amount.slice(amount.indexOf('.'));
+  };
+  const amtInt = hasDecimal ? amount.slice(0, amount.indexOf('.')) : amount;
   if (amtInt.length <= 3) {
-    return `$${amount} billion`;
+    return hasDecimal ? `$${amtInt}${decimal} billion` : `$${amtInt} billion`;
   } else {
     const commaAmt = `,${amtInt.slice(-3)}`;
     const commaBefore = `${amtInt.slice(0, -3)}`;
-    return `$${commaBefore}${commaAmt}${decimal} billion`;
+    return hasDecimal ? `$${commaBefore}${commaAmt}${decimal} billion` : `$${commaBefore}${commaAmt} billion`;
   }
 }
 
