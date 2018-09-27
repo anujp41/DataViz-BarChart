@@ -27,12 +27,13 @@ const formatDate = date => {
 const formatAmount = amount => {
   amount = amount.toString();
   const amtInt = amount.slice(0, amount.indexOf('.'));
+  const decimal = amount.slice(amount.indexOf('.'));
   if (amtInt.length <= 3) {
     return `$${amount} billion`;
   } else {
     const commaAmt = `,${amtInt.slice(-3)}`;
     const commaBefore = `${amtInt.slice(0, -3)}`;
-    return `$${commaBefore}${commaAmt} billion`;
+    return `$${commaBefore}${commaAmt}${decimal} billion`;
   }
 }
 
@@ -93,6 +94,11 @@ svg.selectAll('rect')
     tooltip.style('visibility', 'hidden')
   });
 
-const tooltip = d3.selectAll('body')
+const tooltip = d3.select('body')
                   .append('div')
                   .attr('class', 'tooltip');
+
+d3.select('body')
+  .append('div')
+  .attr('class', 'title')
+  .html(`<p>United States GDP</p>`);

@@ -21,3 +21,12 @@
 h5 {
   margin: 2px 0;
 }
+
+.title {
+  position: absolute;
+  top: 25px;
+  visibility: visible;
+  width: 50%;
+  left: 35%;
+  font-size: 45px;
+}
