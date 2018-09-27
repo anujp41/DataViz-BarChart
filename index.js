@@ -17,6 +17,25 @@ const getYear = dateString => dateString.slice(0, dateString.indexOf('-'));
 const minDate = new Date(GDPData[0][0]);
 const maxDate = new Date(GDPData[GDPData.length-1][0]);
 
+//utils
+const formatDate = date => {
+  const year = date.slice(0, date.indexOf('-'));
+  const month = parseInt(date.slice(date.indexOf('-')+1, date.lastIndexOf('-')));
+  return `${year} Q${month%4+1}`;
+}
+
+const formatAmount = amount => {
+  amount = amount.toString();
+  const amtInt = amount.slice(0, amount.indexOf('.'));
+  if (amtInt.length <= 3) {
+    return `$${amount} billion`;
+  } else {
+    const commaAmt = `,${amtInt.slice(-3)}`;
+    const commaBefore = `${amtInt.slice(0, -3)}`;
+    return `$${commaBefore}${commaAmt} billion`;
+  }
+}
+
 //loop thru the GDP Array to find min/max
 GDPData.forEach(element => {
   const GDP = element[1];
@@ -55,16 +74,23 @@ svg.append('g')
 svg.selectAll('rect')
   .data(GDPData)
   .enter().append('rect')
-  .attr('height',d => 825*(d[1]/maxGDP))
-  .attr('width',barWidth)
-  .attr('fill','pink')
-  .attr('x',(d, i) => (barWidth*i)+50)
-  .attr('y',d => 875-825*(d[1]/maxGDP));
+  .attr('class', 'rect')
+  .attr('height', d => 825*(d[1]/maxGDP))
+  .attr('width', barWidth)
+  .attr('x', (d, i) => (barWidth*i)+50)
+  .attr('y', d => 875-825*(d[1]/maxGDP))
+  .on('mouseover', () => {
+    tooltip.style('visibility', 'visible')
+  })
+  .on("mousemove", d => {
+    return tooltip
+            .style("top", (event.pageY+25)+"px").style("left",(event.pageX+25)+"px")
+            .html(`<h5>${formatDate(d[0])}</h5><h5>${formatAmount(d[1])}</h5>`);
+  })
+  .on('mouseout', d => {
+    tooltip.style('visibility', 'hidden')
+  });
 
-console.log('minGDP: ', minGDP)
-console.log('maxGDP: ', maxGDP)
-console.log('0: ', GDPData[0][1])
-console.log('50: ', GDPData[50][1])
-console.log('100: ', GDPData[100][1])
-console.log('200: ', GDPData[200][1])
-console.log('250: ', GDPData[250][1], 825*(GDPData[250][1]/maxGDP))
+const tooltip = d3.selectAll('body')
+                  .append('div')
+                  .attr('class', 'tooltip');

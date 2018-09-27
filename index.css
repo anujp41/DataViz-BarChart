@@ -1,0 +1,23 @@
+.rect {
+  fill: #edc9ef;
+  position: relative;
+}
+
+.rect:hover {
+  fill: #b330ba
+}
+
+.tooltip {
+  visibility: hidden;
+  position: absolute;
+  z-index: 100;
+  background-color: #d7dbd4;
+  padding: 10px;
+  text-align: center;
+  opacity: 0.75;
+  border-radius: 15px;
+}
+
+h5 {
+  margin: 2px 0;
+}
