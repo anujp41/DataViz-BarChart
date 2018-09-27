@@ -36,6 +36,8 @@ const formatAmount = amount => {
   }
 }
 
+const formatToolTip = d => `<h5>${formatDate(d[0])}</h5><h5>${formatAmount(d[1])}</h5>`
+
 //loop thru the GDP Array to find min/max
 GDPData.forEach(element => {
   const GDP = element[1];
@@ -85,7 +87,7 @@ svg.selectAll('rect')
   .on("mousemove", d => {
     return tooltip
             .style("top", (event.pageY+25)+"px").style("left",(event.pageX+25)+"px")
-            .html(`<h5>${formatDate(d[0])}</h5><h5>${formatAmount(d[1])}</h5>`);
+            .html(formatToolTip(d));
   })
   .on('mouseout', d => {
     tooltip.style('visibility', 'hidden')
