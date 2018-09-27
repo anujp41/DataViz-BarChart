@@ -1,0 +1,1 @@
+Bar Chart exercise from Free Code Camp's Data Viz workshop
