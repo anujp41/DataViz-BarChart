@@ -4,6 +4,13 @@ const {data: jsonData} = window;
 // array of GDP data
 const {source_name, description, from_date, to_date, data: GDPData} = jsonData;
 const totalData = GDPData.length;
+const tickYear = GDPData.filter(d => {
+  const date = d[0];
+  const year = parseInt(date.slice(0, date.indexOf('-')));
+  const month = date.slice(date.indexOf('-')+1, date.lastIndexOf('-'));
+  if (year%5 === 0 && month === '01') return year;
+}).map(item => parseInt(item.slice(0, item.indexOf('-'))));
+tickYear.unshift(1947);
 
 //placeholders for min/max GDP
 let minGDP = Infinity;
@@ -12,13 +19,9 @@ let maxGDP = -Infinity;
 const barWidth = 1125/totalData;
 const getYear = dateString => dateString.slice(0, dateString.indexOf('-'));
 
-//min/max Date
-const minDate = new Date(GDPData[0][0]);
-const maxDate = new Date(GDPData[GDPData.length-1][0]);
-
 //utils
 const formatDate = date => {
-  const year = date.slice(0, date.indexOf('-'));
+  const year = date.slice(0, 4);
   const month = parseInt(date.slice(date.indexOf('-')+1, date.lastIndexOf('-')));
   return `${year} Q${month%4+1}`;
 }
@@ -55,7 +58,7 @@ const svg = d3.select('body')
               .attr('height', '900');
 
 const xscale = d3.scaleLinear()
-                .domain([minDate, maxDate])
+                .domain([d3.min(tickYear), d3.max(tickYear)])
                 .range([0, 1125]);
 
 const yscale = d3.scaleLinear()
@@ -63,15 +66,15 @@ const yscale = d3.scaleLinear()
                 .range([875, 50]);
 
 const x_axis = d3.axisBottom()
-                .scale(xscale);
+                .scale(xscale)
+                .tickFormat(d3.format("d"));
 
 const y_axis = d3.axisLeft()
                 .scale(yscale);
 
 svg.append('g')
   .attr('transform', 'translate(50, 875)')
-  .call(x_axis)
-  .selectAll('text').remove();
+  .call(x_axis);
 
 svg.append('g')
   .attr('transform', 'translate(50,0)')
